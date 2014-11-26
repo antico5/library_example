@@ -89,4 +89,16 @@ describe "Books API" do
       end
     end
   end
+
+  describe "User authentication" do
+    it "requires a valid token to access actions" do
+      get "/books"
+      expect(response.status).to eq(401)
+      post "/books"
+      expect(response.status).to eq(401)
+      post "/books/1/borrow"
+      expect(response.status).to eq(401)
+    end
+
+  end
 end
