@@ -1,11 +1,10 @@
 require 'spec_helper'
 
 describe "Books API" do
-
-  let(:valid_params) {{ name: "Valid book", year: 2010, author: "Someone" }}
-  let(:invalid_params) {{ name: nil, year: 2010, author: "Someone" }}
-
   describe "POST /books", user: :admin do
+    let(:valid_params) {{ name: "Valid book", year: 2010, author: "Someone" }}
+    let(:invalid_params) {{ name: nil, year: 2010, author: "Someone" }}
+
     describe "with valid params" do
       it "creates a new Book" do
         expect {
