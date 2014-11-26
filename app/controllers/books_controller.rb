@@ -1,26 +1,21 @@
 class BooksController < ApplicationController
-  # GET /books
-  # GET /books.json
+  before_action :authenticate
+  before_action :authorize_admin, only: [ :create ]
+
   def index
-    @books = Book.all
-    render json: @books
+    if params[:query]
+      @books = Book.search params[:query]
+      render json: @books
+    else
+      render json: "Missing query parameter.", status: 400
+    end
   end
 
-  # GET /books/1
-  # GET /books/1.json
-  def show
-    @book = Book.find(params[:id])
-
-    render json: @book
-  end
-
-  # POST /books
-  # POST /books.json
   def create
-    @book = Book.new(book_params)
+    @book = current_user.books.new(book_params)
 
     if @book.save
-      render json: @book, status: :created, location: @book
+      render json: @book, status: 201
     else
       render json: @book.errors, status: :unprocessable_entity
     end
@@ -48,8 +43,9 @@ class BooksController < ApplicationController
   end
 
   private
-    
-    def book_params
-      params.require(:book).permit(:name, :year, :author, :borrowed_date, :owner_id)
-    end
+
+  def book_params
+    params.require(:book).permit(:name, :year, :author)
+  end
+
 end

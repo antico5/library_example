@@ -43,7 +43,7 @@ describe "Books API" do
     describe "with a query string" do
       it "lists available books that match a name search" do
         authorized_get "/books", q: "Aleph"
-        expect(json.first.name).to eq("El Aleph")
+        expect(json.first["name"]).to eq("El Aleph")
       end
 
       it "doesn't include unavailable books" do
