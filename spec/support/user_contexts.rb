@@ -11,7 +11,7 @@ shared_context "Customer session", user: :customer do
 end
 
 def authorized_action verb, *params
-  params << { "HTTP_AUTHORIZATION" => "Token token=\"my_token\"" }
+  params[2] = { "HTTP_AUTHORIZATION" => "Token token=\"my_token\"" }
   send verb, *params
 end
 
