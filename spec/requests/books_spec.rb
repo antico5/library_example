@@ -72,6 +72,7 @@ describe "Books API" do
       end
 
       it "makes the book unavailable" do
+        available_book
         authorized_get "/books", query: "Test book"
         expect(json.count).to eq(1)
         authorized_post "/books/#{ available_book.id }/borrow"
@@ -82,9 +83,9 @@ describe "Books API" do
     end
 
     describe "with an unavailable book" do
-      it "returns 400 status code" do
+      it "returns 404 status code" do
         authorized_post "/books/#{ unavailable_book.id }/borrow"
-        expect(response.status).to eq(400)
+        expect(response.status).to eq(404)
       end
     end
   end
