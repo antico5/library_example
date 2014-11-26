@@ -14,21 +14,21 @@ describe "Books API" do
 
       it "returns new book attributes" do
         authorized_post "/books", book: valid_params
-        expect(json["name"]).to be valid_params[:name]
-        expect(json["author"]).to be valid_params[:author]
+        expect(json["name"]).to eq valid_params[:name]
+        expect(json["author"]).to eq valid_params[:author]
         expect(json["id"]).to not_be_nil
       end
 
       it "returns status code 201" do
         authorized_post "/books", book: valid_params
-        expect(response.status).to be(201)
+        expect(response.status).to eq(201)
       end
     end
 
     describe "with invalid params" do
       it "returns status code 400" do
         authorized_post :create, book: invalid_params
-        expect(response.status).to be(400)
+        expect(response.status).to eq(400)
       end
     end
   end
@@ -43,12 +43,12 @@ describe "Books API" do
     describe "with a query string" do
       it "lists available books that match a name search" do
         authorized_get "/books", q: "Aleph"
-        expect(json.first.name).to be("El Aleph")
+        expect(json.first.name).to eq("El Aleph")
       end
 
       it "doesn't include unavailable books" do
         authorized_get "/books", q: "El"
-        expect(json.count).to be(1)
+        expect(json.count).to eq(1)
       end
 
     end
@@ -56,7 +56,7 @@ describe "Books API" do
     describe "without a query string" do
       it "returns 400 status code" do
         authorized_get "/books"
-        expect(response.status).to be(400)
+        expect(response.status).to eq(400)
       end
     end
   end
@@ -68,15 +68,15 @@ describe "Books API" do
     describe "with an available book" do
       it "returns 200 status code" do
         authorized_post "/books/#{ available_post.id }/borrow"
-        expect(response.status).to be(200)
+        expect(response.status).to eq(200)
       end
 
       it "makes the book unavailable" do
         authorized_get "/books", q: "Test book"
-        expect(json.count).to be(1)
+        expect(json.count).to eq(1)
         authorized_post "/books/#{ available_post.id }/borrow"
         authorized_get "/books", q: "Test book"
-        expect(json.count).to be(0)
+        expect(json.count).to eq(0)
       end
 
     end
@@ -84,7 +84,7 @@ describe "Books API" do
     describe "with an unavailable book" do
       it "returns 400 status code" do
         authorized_post "/books/#{ unavailable_post.id }/borrow"
-        expect(response.status).to be(400)
+        expect(response.status).to eq(400)
       end
     end
   end
