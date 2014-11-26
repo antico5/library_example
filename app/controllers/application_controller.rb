@@ -9,15 +9,12 @@ class ApplicationController < ActionController::API
   private
 
   def authenticate
-    @current_user = authenticate_with_http_token { |token, options| User.find_by_token token }
-    unless @current_user
-      render json: "Invalid Token", status: 401
-    end
+    @current_user ||= authenticate_with_http_token { |token, options| User.find_by_token token }
+    @current_user || render( json: 'Invalid Token', status: 401 )
   end
 
   def authorize_admin
-    unless @current_user.try :admin?
-      render json: "Only administrators can add books.", status: 401
-    end
+    current_user.admin? || render(json: 'Only administrators can add books.', status: 401)
   end
+
 end
