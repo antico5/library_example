@@ -3,4 +3,8 @@
 Considerations:
  I've chosen rails because it's easier to prototype. If this was a productive API I'd go with grape probably.
  There is no api versioning due to its simplicity.
+ Developed with TDD
+ Tests can be less repetitive by using FactoryGirl.
+ Admins can perform customer actions.
+ I had no time to write model tests.
 
