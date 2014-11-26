@@ -16,7 +16,7 @@ describe "Books API" do
         authorized_post "/books", book: valid_params
         expect(json["name"]).to eq valid_params[:name]
         expect(json["author"]).to eq valid_params[:author]
-        expect(json["id"]).to not_be_nil
+        expect(json["id"]).to_not be_nil
       end
 
       it "returns status code 201" do
@@ -27,27 +27,27 @@ describe "Books API" do
 
     describe "with invalid params" do
       it "returns status code 400" do
-        authorized_post :create, book: invalid_params
+        authorized_post "/books", book: invalid_params
         expect(response.status).to eq(400)
       end
     end
   end
 
   describe "GET /books", user: :customer do
-    before do
-      Book.create name: "El Aleph", year: 1984, author: "Jorge Luis Borges"
-      Book.create name: "La Resistencia", year: 1988, author: "Ernesto Sabato"
-      Book.create name: "El Tunel", year: 1998, author: "Ernesto Sabato", borrowed_date: 5.days.ago
-    end
-
     describe "with a query string" do
+      before do
+        Book.create! name: "El Aleph", year: 1984, author: "Jorge Luis Borges"
+        Book.create! name: "La Resistencia", year: 1988, author: "Ernesto Sabato"
+        Book.create! name: "El Tunel", year: 1998, author: "Ernesto Sabato", borrowed_date: 5.days.ago
+      end
+
       it "lists available books that match a name search" do
-        authorized_get "/books", q: "Aleph"
-        expect(json.first.name).to eq("El Aleph")
+        authorized_get "/books", query: "Aleph"
+        expect(json.first["name"]).to eq("El Aleph")
       end
 
       it "doesn't include unavailable books" do
-        authorized_get "/books", q: "El"
+        authorized_get "/books", query: "El"
         expect(json.count).to eq(1)
       end
 
@@ -67,15 +67,15 @@ describe "Books API" do
 
     describe "with an available book" do
       it "returns 200 status code" do
-        authorized_post "/books/#{ available_post.id }/borrow"
+        authorized_post "/books/#{ available_book.id }/borrow"
         expect(response.status).to eq(200)
       end
 
       it "makes the book unavailable" do
-        authorized_get "/books", q: "Test book"
+        authorized_get "/books", query: "Test book"
         expect(json.count).to eq(1)
-        authorized_post "/books/#{ available_post.id }/borrow"
-        authorized_get "/books", q: "Test book"
+        authorized_post "/books/#{ available_book.id }/borrow"
+        authorized_get "/books", query: "Test book"
         expect(json.count).to eq(0)
       end
 
@@ -83,7 +83,7 @@ describe "Books API" do
 
     describe "with an unavailable book" do
       it "returns 400 status code" do
-        authorized_post "/books/#{ unavailable_post.id }/borrow"
+        authorized_post "/books/#{ unavailable_book.id }/borrow"
         expect(response.status).to eq(400)
       end
     end
