@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141126002333) do
+ActiveRecord::Schema.define(version: 20141126171613) do
 
   create_table "books", force: true do |t|
     t.string   "name"
@@ -22,6 +22,9 @@ ActiveRecord::Schema.define(version: 20141126002333) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "books", ["borrowed_date"], name: "index_books_on_borrowed_date"
+  add_index "books", ["name"], name: "index_books_on_name"
 
   create_table "users", force: true do |t|
     t.string   "email"
